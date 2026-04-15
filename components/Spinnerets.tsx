@@ -95,10 +95,13 @@ export default function Spinnerets() {
         </div>
       </div>
 
-      {/* horizontal snap scroll — raised z-index + contain-layout to keep cards above background layers */}
+      {/* horizontal snap scroll — z-10 + isolate so cards sit above bg particles.
+          No overflow-y-hidden / contain:paint: those were clipping the bottom
+          of the cards (date + read-time row were invisible). Vertical overflow
+          is fine because all children are a single horizontal flex row. */}
       <div
-        className="spinnerets-scroll relative z-10 px-6 md:px-[calc((100vw-72rem)/2+1.5rem)] pb-4 overflow-x-auto overflow-y-hidden snap-x snap-mandatory isolate"
-        style={{ scrollPaddingLeft: '1.5rem', contain: 'layout paint' }}
+        className="spinnerets-scroll relative z-10 px-6 md:px-[calc((100vw-72rem)/2+1.5rem)] pt-2 pb-10 overflow-x-auto snap-x snap-mandatory isolate"
+        style={{ scrollPaddingLeft: '1.5rem' }}
       >
         <div className="flex gap-5">
           {posts.map((p) => {
