@@ -1,31 +1,33 @@
 import SpiderMark from './SpiderMark';
 
+// Anchor hrefs land on existing sections; placeholders route to /404 so every
+// link is actionable while we stub real pages.
 const navGroups = [
   {
     title: 'Casino',
     links: [
-      { label: 'Games', href: '#games' },
-      { label: 'Promotions', href: '#promotions' },
-      { label: 'Spinnerets', href: '#spinnerets' },
-      { label: 'Colony', href: '#colony' },
+      { label: 'Games', href: '/#games' },
+      { label: 'Promotions', href: '/404' },
+      { label: 'Spinnerets', href: '/#spinnerets' },
+      { label: 'Colony', href: '/#colony' },
     ],
   },
   {
     title: 'Help',
     links: [
-      { label: 'Responsible Gaming', href: '#rg' },
-      { label: 'Terms', href: '#terms' },
-      { label: 'Privacy', href: '#privacy' },
-      { label: 'Support', href: '#support' },
+      { label: 'Responsible Gaming', href: '/404' },
+      { label: 'Terms', href: '/404' },
+      { label: 'Privacy', href: '/404' },
+      { label: 'Support', href: '/404' },
     ],
   },
   {
     title: 'The Lair',
     links: [
-      { label: 'About', href: '#about' },
-      { label: 'VIP', href: '#vip' },
-      { label: 'Banking', href: '#banking' },
-      { label: 'Refer a Friend', href: '#refer' },
+      { label: 'About', href: '/404' },
+      { label: 'VIP', href: '/#vip' },
+      { label: 'Banking', href: '/#cashier' },
+      { label: 'Refer a Friend', href: '/404' },
     ],
   },
 ];

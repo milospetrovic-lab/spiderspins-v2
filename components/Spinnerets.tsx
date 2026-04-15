@@ -95,10 +95,10 @@ export default function Spinnerets() {
         </div>
       </div>
 
-      {/* horizontal snap scroll */}
+      {/* horizontal snap scroll — raised z-index + contain-layout to keep cards above background layers */}
       <div
-        className="spinnerets-scroll px-6 md:px-[calc((100vw-72rem)/2+1.5rem)] pb-4 overflow-x-auto snap-x snap-mandatory"
-        style={{ scrollPaddingLeft: '1.5rem' }}
+        className="spinnerets-scroll relative z-10 px-6 md:px-[calc((100vw-72rem)/2+1.5rem)] pb-4 overflow-x-auto overflow-y-hidden snap-x snap-mandatory isolate"
+        style={{ scrollPaddingLeft: '1.5rem', contain: 'layout paint' }}
       >
         <div className="flex gap-5">
           {posts.map((p) => {
@@ -140,9 +140,9 @@ export default function Spinnerets() {
                     {p.excerpt}
                   </p>
 
-                  <div className="mt-6 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.26em] text-shadow">
-                    <span>{p.date}</span>
-                    <span>{p.readTime}</span>
+                  <div className="mt-6 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.28em]">
+                    <span className="text-silk-dim">{p.date}</span>
+                    <span className="text-silk/70">{p.readTime}</span>
                     <span className="text-strike opacity-0 group-hover:opacity-100 transition-opacity">
                       Read →
                     </span>

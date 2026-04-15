@@ -12,7 +12,6 @@ import SpiderRain from '@/components/SpiderRain';
 import InteractiveWebGrid from '@/components/InteractiveWebGrid';
 import PaymentCard from '@/components/PaymentCard';
 import HeroHexFrame from '@/components/HeroHexFrame';
-import WarpTunnel from '@/components/WarpTunnel';
 import HeroScrollTransition from '@/components/HeroScrollTransition';
 import HeroBottomDrip from '@/components/HeroBottomDrip';
 
@@ -21,47 +20,24 @@ export default function HomePage() {
     <>
       <HeroScrollTransition />
 
-      {/* HERO — v2 */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden">
-        {/* Layer 1 — barely-there warp tunnel backdrop (animated in on intro) */}
-        <div
-          data-intro="warp"
-          aria-hidden
-          className="absolute inset-0 z-[1] pointer-events-none"
-          style={{ opacity: 0.32, filter: 'blur(1.2px)' }}
-        >
-          <WarpTunnel minimal speed={0.35} />
-        </div>
-
-        {/* Layer 2 — dim hex frame (zooms through camera on intro) */}
-        <div
-          data-intro="hex"
-          aria-hidden
-          className="absolute inset-0 z-[2] pointer-events-none"
-          style={{ transformOrigin: '50% 50%' }}
-        >
+      {/* HERO — v2 (warp removed for mobile perf) */}
+      <section className="relative min-h-screen flex items-center justify-center px-6 pb-20 md:pb-28 overflow-hidden">
+        {/* Hex frame */}
+        <div data-intro="hex" aria-hidden className="absolute inset-0 z-[2] pointer-events-none" style={{ transformOrigin: '50% 50%' }}>
           <HeroHexFrame />
         </div>
 
-        {/* Layer 3 — v1 interactive dot grid (fades in after climax) */}
-        <div
-          data-intro="grid"
-          aria-hidden
-          className="absolute inset-0 z-[4]"
-        >
+        {/* Interactive dot grid */}
+        <div data-intro="grid" aria-hidden className="absolute inset-0 z-[4]">
           <InteractiveWebGrid />
         </div>
 
-        {/* Layer 4 — spider rain (fades in after climax) */}
-        <div
-          data-intro="rain"
-          aria-hidden
-          className="absolute inset-0 z-[5] pointer-events-none"
-        >
+        {/* Spider rain */}
+        <div data-intro="rain" aria-hidden className="absolute inset-0 z-[5] pointer-events-none">
           <SpiderRain />
         </div>
 
-        {/* Layer 5 — very soft center darken so text stays legible */}
+        {/* Soft center darken for text */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 z-[6]"
@@ -76,7 +52,7 @@ export default function HomePage() {
           className="relative z-[7] max-w-5xl mx-auto text-center pointer-events-none"
         >
           <p className="font-mono text-silk-dim text-xs uppercase tracking-[0.4em] mb-8">
-            V2 · Warp · Drag · Confetti
+            Your web. Your rules.
           </p>
           <h1 className="font-display font-black text-silk leading-[0.95] text-[clamp(3rem,10vw,7rem)]">
             Your web.
@@ -91,7 +67,7 @@ export default function HomePage() {
           <p className="mt-8 max-w-2xl mx-auto font-display font-light text-silk-dim text-lg md:text-xl">
             Patient math. Red silk. A casino for players who read the web.
           </p>
-          <div className="mt-12 flex items-center justify-center gap-4 pointer-events-auto">
+          <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pointer-events-auto">
             <a
               href="#enter"
               className="hover-target hero-skip-intro inline-flex items-center px-8 py-4 bg-venom text-silk uppercase tracking-[0.15em] text-sm font-display font-medium hover:bg-strike transition-colors shadow-strike-glow"
@@ -110,7 +86,15 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* Dripping silk nets at the bottom (asymmetric, organic) */}
+        {/* Organic silk fade into next section (replaces the hard horizontal line) */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-0 right-0 bottom-0 h-40 z-[7]"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(5,5,5,0) 0%, rgba(5,5,5,0.45) 55%, #050505 100%)',
+          }}
+        />
         <HeroBottomDrip />
       </section>
 
