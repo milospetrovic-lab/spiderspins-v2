@@ -14,30 +14,44 @@ import PaymentCard from '@/components/PaymentCard';
 import HeroHexFrame from '@/components/HeroHexFrame';
 import HeroScrollTransition from '@/components/HeroScrollTransition';
 import HeroBottomDrip from '@/components/HeroBottomDrip';
+import PromoBanner from '@/components/PromoBanner';
+import WithdrawalLimits from '@/components/WithdrawalLimits';
+import SEOContent from '@/components/SEOContent';
+import SilkBoutique from '@/components/SilkBoutique';
+import SocialShare from '@/components/SocialShare';
+import NeuralWebBackdrop from '@/components/NeuralWebBackdrop';
+
+// ⚠ NeuralWebBackdrop — OPT-IN only. Default OFF. To enable in production:
+//    1. Set NEXT_PUBLIC_NEURAL_WEB=1 in Vercel env vars, OR
+//    2. Change enabled={false} → enabled={true} below and redeploy.
+// Rollback: either revert the env var, or flip this boolean, OR use Vercel's
+// instant-rollback to promote the previous deployment (no code change needed).
+const NEURAL_ENABLED = process.env.NEXT_PUBLIC_NEURAL_WEB === '1';
 
 export default function HomePage() {
   return (
     <>
       <HeroScrollTransition />
 
-      {/* HERO — v2 (warp removed for mobile perf) */}
+      {/* HERO — v2 (warp removed; neural backdrop opt-in via env var) */}
       <section className="relative min-h-screen flex items-center justify-center px-6 pb-20 md:pb-28 overflow-hidden">
-        {/* Hex frame */}
+        {/* Opt-in neural-net backdrop */}
+        {NEURAL_ENABLED && (
+          <div aria-hidden className="absolute inset-0 z-[1] pointer-events-none">
+            <NeuralWebBackdrop enabled intensity={0.55} />
+          </div>
+        )}
+
         <div data-intro="hex" aria-hidden className="absolute inset-0 z-[2] pointer-events-none" style={{ transformOrigin: '50% 50%' }}>
           <HeroHexFrame />
         </div>
-
-        {/* Interactive dot grid */}
         <div data-intro="grid" aria-hidden className="absolute inset-0 z-[4]">
           <InteractiveWebGrid />
         </div>
-
-        {/* Spider rain */}
         <div data-intro="rain" aria-hidden className="absolute inset-0 z-[5] pointer-events-none">
           <SpiderRain />
         </div>
 
-        {/* Soft center darken for text */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 z-[6]"
@@ -86,7 +100,6 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* Organic silk fade into next section (replaces the hard horizontal line) */}
         <div
           aria-hidden
           className="pointer-events-none absolute left-0 right-0 bottom-0 h-40 z-[7]"
@@ -98,15 +111,26 @@ export default function HomePage() {
         <HeroBottomDrip />
       </section>
 
+      {/* A2 · promo banner */}
+      <PromoBanner />
+
       <BenefitsSlider />
       <GameCards />
+      {/* A7 · SEO long-form (collapsed by default) */}
+      <SEOContent />
       <StatsCounters />
       <WebVault />
       <VIPTiers />
       <TermsCalculator />
+      {/* B1 · Silk Boutique (loyalty / comp shop) */}
+      <SilkBoutique />
       <PaymentCard />
+      {/* A4 · Withdrawal limits */}
+      <WithdrawalLimits />
       <Spinnerets />
       <Colony />
+      {/* B2 · Social share rewards */}
+      <SocialShare />
       <FinalCTA />
       <Footer />
     </>

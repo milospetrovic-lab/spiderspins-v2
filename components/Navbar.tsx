@@ -102,6 +102,29 @@ export default function Navbar() {
             <span>RTP 96.1</span>
             <span className="nav-scan-line" />
           </div>
+
+          {/* Cashier — wallet glyph with red dew-drop indicator */}
+          <a
+            href="#cashier"
+            aria-label="Cashier"
+            title="Cashier"
+            className={[
+              'hover-target relative flex items-center justify-center rounded-md border border-strike/40 hover:border-strike/90 text-silk hover:text-strike bg-cave/40 hover:bg-strike/10 transition-colors',
+              scrolled ? 'w-9 h-9' : 'w-10 h-10',
+            ].join(' ')}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <rect x="3" y="7" width="18" height="12" rx="2" />
+              <path d="M3 11h18" />
+              <path d="M16 15h2" />
+            </svg>
+            <span
+              aria-hidden
+              className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-strike"
+              style={{ boxShadow: '0 0 6px rgba(239,68,68,0.8)' }}
+            />
+          </a>
+
           <a
             href="#enter"
             className={[

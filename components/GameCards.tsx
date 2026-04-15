@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import FunModeModal from './FunModeModal';
 
 if (typeof window !== 'undefined') gsap.registerPlugin(ScrollTrigger);
 
@@ -14,6 +15,7 @@ type Game = {
   hue: number; // base hue for generated art
   accent: string;
   theme: 'web' | 'fang' | 'silk' | 'hourglass';
+  image?: string; // prototype-only: path to real provider art
 };
 
 const featured: Game = {
@@ -24,6 +26,7 @@ const featured: Game = {
   hue: 0,
   accent: '#ef4444',
   theme: 'web',
+  image: '/games/fat-cat.jpg',
 };
 
 const supporting: Game[] = [
@@ -35,6 +38,7 @@ const supporting: Game[] = [
     hue: 0,
     accent: '#e8e8e8',
     theme: 'silk',
+    image: '/games/gemtopia.webp',
   },
   {
     name: 'Fang Frenzy',
@@ -44,6 +48,7 @@ const supporting: Game[] = [
     hue: 0,
     accent: '#b91c1c',
     theme: 'fang',
+    image: '/games/buffalo-mania.webp',
   },
   {
     name: 'Hourglass Hunt',
@@ -53,6 +58,7 @@ const supporting: Game[] = [
     hue: 0,
     accent: '#c4a265',
     theme: 'hourglass',
+    image: '/games/fire-dragon.webp',
   },
 ];
 
@@ -189,9 +195,11 @@ function VolPips({ level }: { level: Game['volatility'] }) {
 function Card({
   game,
   featured: isFeatured,
+  onTryFree,
 }: {
   game: Game;
   featured?: boolean;
+  onTryFree?: (g: Game) => void;
 }) {
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -251,8 +259,38 @@ function Card({
           : '0 10px 30px -20px rgba(0,0,0,0.8)',
       }}
     >
-      {/* generated art */}
-      <GameArt theme={game.theme} accent={game.accent} large={isFeatured} />
+      {/* art — real image if available, else generated SVG */}
+      {game.image ? (
+        <>
+          <img
+            src={game.image}
+            alt=""
+            aria-hidden
+            className="absolute inset-0 w-full h-full object-cover opacity-75 transition-opacity duration-400 group-hover:opacity-90"
+            loading="lazy"
+            decoding="async"
+          />
+          {/* brand-tint overlay so provider art reads as ours */}
+          <div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: `linear-gradient(160deg, ${game.accent}33 0%, rgba(5,5,5,0.15) 38%, rgba(5,5,5,0.88) 100%)`,
+              mixBlendMode: 'multiply',
+            }}
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                'linear-gradient(180deg, rgba(5,5,5,0) 40%, rgba(5,5,5,0.72) 85%, rgba(5,5,5,0.92) 100%)',
+            }}
+          />
+        </>
+      ) : (
+        <GameArt theme={game.theme} accent={game.accent} large={isFeatured} />
+      )}
 
       {/* HUD frame */}
       <span className="gc-corner tl" />
@@ -302,15 +340,27 @@ function Card({
           </div>
         </div>
 
-        <a
-          href="#play"
-          className="hover-target absolute bottom-5 right-5 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-strike/60 bg-strike/10 text-strike font-display text-xs uppercase tracking-[0.22em] opacity-0 translate-y-2 transition-all duration-300 gc-play"
-        >
-          Play now
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M5 12h14M13 5l7 7-7 7" />
-          </svg>
-        </a>
+        <div className="absolute bottom-5 right-5 flex items-center gap-2 opacity-0 translate-y-2 transition-all duration-300 gc-play">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              if (onTryFree) onTryFree(game);
+            }}
+            className="hover-target inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-web-light/70 hover:border-silk/80 text-silk-dim hover:text-silk font-display text-[11px] uppercase tracking-[0.2em] transition-colors"
+          >
+            Try free
+          </button>
+          <a
+            href="#cashier"
+            className="hover-target inline-flex items-center gap-2 px-4 py-2 rounded-full border border-strike/60 bg-strike/10 text-strike font-display text-xs uppercase tracking-[0.22em]"
+          >
+            Play now
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14M13 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
       </div>
     </div>
   );
@@ -318,6 +368,7 @@ function Card({
 
 export default function GameCards() {
   const sectionRef = useRef<HTMLElement | null>(null);
+  const [funGame, setFunGame] = useState<Game | null>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -367,14 +418,20 @@ export default function GameCards() {
         </div>
 
         <div className="mb-5 md:mb-6">
-          <Card game={featured} featured />
+          <Card game={featured} featured onTryFree={setFunGame} />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {supporting.map((g) => (
-            <Card key={g.name} game={g} />
+            <Card key={g.name} game={g} onTryFree={setFunGame} />
           ))}
         </div>
       </div>
+
+      <FunModeModal
+        open={!!funGame}
+        game={funGame}
+        onClose={() => setFunGame(null)}
+      />
     </section>
   );
 }

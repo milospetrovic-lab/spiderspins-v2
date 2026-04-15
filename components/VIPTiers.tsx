@@ -158,34 +158,56 @@ type Tier = {
   benefits: string[];
 };
 
+// Benefits modeled on BonusBlitz VIP structure, reskinned in spider language.
+// Every tier has: weekly payout limit · comp-point rate · cashback % · free-spins day.
 const tiers: Tier[] = [
   {
     name: 'Hatchling',
     color: '#666666',
     label: 'Entry',
     description: 'First thread of the web. Every spider starts here.',
-    benefits: ['Welcome bonus', 'Daily spins', '24/7 chat', 'Starter tournaments'],
+    benefits: [
+      '$1,000 weekly payout',
+      '1 Silk Point / $30 wagered',
+      '10% instant cashback',
+      'Saturday free spins',
+    ],
   },
   {
     name: 'Hunter',
     color: '#aaaaaa',
     label: 'Active',
     description: 'The silk is learning your pattern. Weekly perks begin.',
-    benefits: ['Weekly reload', 'Cashback 5%', 'VIP chat lane', 'Birthday drop'],
+    benefits: [
+      '$2,000 weekly payout',
+      '1 Silk Point / $20 wagered',
+      '20% instant cashback',
+      'Sunday free spins',
+    ],
   },
   {
     name: 'Weaver',
     color: '#ef4444',
     label: 'Consistent',
-    description: 'The web takes shape. Rewards compound.',
-    benefits: ['Cashback 10%', 'Higher limits', 'Dedicated host', 'Exclusive slots'],
+    description: 'The web takes shape. Rewards compound weekly.',
+    benefits: [
+      '$5,000 weekly payout',
+      '1 Silk Point / $15 wagered',
+      '25% instant cashback',
+      'Dedicated VIP host',
+    ],
   },
   {
     name: 'Widow',
     color: '#b91c1c',
     label: 'High roller',
     description: 'Full command of the strand. Invitations open.',
-    benefits: ['Cashback 15%', 'Custom bonuses', 'Invite events', 'Priority withdrawals'],
+    benefits: [
+      '$10,000 weekly payout',
+      '1 Silk Point / $10 wagered',
+      '30% instant cashback',
+      'Priority withdrawals',
+    ],
   },
   {
     name: 'Empress',
@@ -193,10 +215,10 @@ const tiers: Tier[] = [
     label: 'Top 1%',
     description: 'Golden silk. The web moves on your word.',
     benefits: [
-      'Cashback 20%',
-      'Concierge 24/7',
-      'Travel & experiences',
-      'Bespoke rewards',
+      'Unlimited weekly payout',
+      '1 Silk Point / $5 wagered',
+      '40% instant cashback',
+      'Concierge 24/7 · travel',
     ],
   },
 ];
