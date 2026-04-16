@@ -136,9 +136,9 @@ export default function ConfettiCannon({
     // The pointermove handler firing on every scroll-touch was the main
     // cause of the post-hero scroll lag on mobile. Programmatic burst
     // (via window CustomEvent 'spiderspins:burst') still works.
-    let isTouchDevice = false;
+    let isTouch = false;
     try {
-      isTouchDevice = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+      isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
     } catch {}
 
     const ctx = canvas.getContext('2d')!;
@@ -499,7 +499,7 @@ export default function ConfettiCannon({
     };
 
     // Only attach drag listeners on non-touch devices.
-    if (!isTouchDevice) {
+    if (!isTouch) {
       window.addEventListener('pointerdown', onPointerDown);
       window.addEventListener('pointermove', onPointerMove);
       window.addEventListener('pointerup', endDrag);
@@ -511,7 +511,7 @@ export default function ConfettiCannon({
 
     return () => {
       window.removeEventListener('resize', resize);
-      if (!isTouchDevice) {
+      if (!isTouch) {
         window.removeEventListener('pointerdown', onPointerDown);
         window.removeEventListener('pointermove', onPointerMove);
         window.removeEventListener('pointerup', endDrag);
