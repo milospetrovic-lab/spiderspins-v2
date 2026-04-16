@@ -18,6 +18,15 @@ export default function HeroScrollTransition() {
     } catch {}
     if (mq && mq.matches) return;
 
+    // Skip on touch devices entirely. The scroll-scrubbed timeline (scrub: 0.55
+    // animating warp/hex/grid/rain/text simultaneously) was causing a visible
+    // twitch on real phones when scrolling in and out of the hero — even
+    // though dev-tools mobile emulation didn't reproduce it. On desktop the
+    // exit animation stays cinematic; on mobile we skip it for smooth scroll.
+    try {
+      if (window.matchMedia('(hover: none), (pointer: coarse)').matches) return;
+    } catch {}
+
     const heroSection =
       document.querySelector<HTMLElement>('section:first-of-type');
     if (!heroSection) return;
