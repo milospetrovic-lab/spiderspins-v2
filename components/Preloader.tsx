@@ -4,7 +4,13 @@ import { useEffect, useRef, useState } from 'react';
 import { lottieSpiderData } from './lottieSpider';
 
 export default function Preloader() {
-  const [phase, setPhase] = useState<'show' | 'fade' | 'gone'>('show');
+  const [phase, setPhase] = useState<'show' | 'fade' | 'gone'>(() => {
+    if (typeof window === 'undefined') return 'show';
+    try {
+      if (window.location.search.includes('nopreload=1')) return 'gone';
+    } catch {}
+    return 'show';
+  });
   const [progress, setProgress] = useState(0);
   const lottieRef = useRef<HTMLDivElement | null>(null);
 
