@@ -7,6 +7,7 @@ import { getGPUTier } from 'detect-gpu';
 export default function AmbientParticles() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [enabled, setEnabled] = useState(true);
+  const [isTouch, setIsTouch] = useState(false);
   // GPU tier 0 = unsupported / blacklisted, 1 = low, 2 = mid, 3 = high
   // We default to 2 (mid) until detection resolves.
   const [gpuTier, setGpuTier] = useState<number>(2);
@@ -17,12 +18,9 @@ export default function AmbientParticles() {
       setEnabled(false);
       return;
     }
-    // Touch devices skip ambient particles entirely — Three.js Points + canvas
-    // texture was a measurable scroll-jank source on phones.
     try {
       if (window.matchMedia('(hover: none), (pointer: coarse)').matches) {
-        setEnabled(false);
-        return;
+        setIsTouch(true);
       }
     } catch {}
     let cancelled = false;
@@ -59,8 +57,12 @@ export default function AmbientParticles() {
     camera.position.set(0, -100, 400);
     camera.lookAt(0, 0, 0);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+    const renderer = new THREE.WebGLRenderer({
+      antialias: !isTouch,
+      alpha: true,
+      powerPreference: isTouch ? 'low-power' : 'high-performance',
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isTouch ? 1.25 : 1.75));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
@@ -87,12 +89,15 @@ export default function AmbientParticles() {
     const texB = makeSprite('rgba(185,28,28,0.85)', 'rgba(80,10,10,0.2)');
 
     const isMobile = window.innerWidth < 768;
-    // Adaptive counts by GPU tier × form factor. Tier 1 (low) gets a big cut.
+    // Touch gets a deep cut — ~400 total particles max. GPU tier still scales
+    // desktop. Touch tier 1 falls back to an even lighter footprint.
     const tierMultiplier = gpuTier >= 3 ? 1 : gpuTier === 2 ? 0.7 : 0.35;
-    const baseA = isMobile ? 900 : 2800;
-    const baseB = isMobile ? 700 : 2200;
-    const countA = Math.max(200, Math.round(baseA * tierMultiplier));
-    const countB = Math.max(150, Math.round(baseB * tierMultiplier));
+    const baseA = isTouch ? 240 : isMobile ? 900 : 2800;
+    const baseB = isTouch ? 160 : isMobile ? 700 : 2200;
+    const floorA = isTouch ? 120 : 200;
+    const floorB = isTouch ? 80 : 150;
+    const countA = Math.max(floorA, Math.round(baseA * tierMultiplier));
+    const countB = Math.max(floorB, Math.round(baseB * tierMultiplier));
 
     const buildPoints = (count: number, tex: THREE.Texture, opacity: number) => {
       const g = new THREE.BufferGeometry();
@@ -174,7 +179,7 @@ export default function AmbientParticles() {
         container.removeChild(renderer.domElement);
       }
     };
-  }, [enabled, gpuTier]);
+  }, [enabled, gpuTier, isTouch]);
 
   return (
     <div

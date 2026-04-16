@@ -11,7 +11,6 @@ import ScrollProgress from '@/components/ScrollProgress';
 import Preloader from '@/components/Preloader';
 import AmbientParticles from '@/components/AmbientParticles';
 import ParticleField3D from '@/components/ParticleField3D';
-import GlobalParticles from '@/components/GlobalParticles';
 import HUDOverlay from '@/components/HUDOverlay';
 import ScrollSpider from '@/components/ScrollSpider';
 import ConfettiCannon from '@/components/ConfettiCannon';
@@ -113,7 +112,6 @@ export default function RootLayout({
         <WebBackground />
         <AmbientParticles />
         <ParticleField3D />
-        <GlobalParticles />
         <FogLayers />
         <SpiderWebCursor />
         <GrainOverlay />

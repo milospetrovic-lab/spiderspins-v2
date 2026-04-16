@@ -11,6 +11,7 @@ import { getGPUTier } from 'detect-gpu';
 export default function ParticleField3D() {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const [enabled, setEnabled] = useState(true);
+  const [isTouch, setIsTouch] = useState(false);
   const [tier, setTier] = useState<number>(2);
 
   useEffect(() => {
@@ -19,11 +20,8 @@ export default function ParticleField3D() {
         setEnabled(false);
         return;
       }
-      // Touch devices skip the warp particle field entirely — 130+ animated
-      // DOM nodes was a measurable scroll-lag source on mobile.
       if (window.matchMedia('(hover: none), (pointer: coarse)').matches) {
-        setEnabled(false);
-        return;
+        setIsTouch(true);
       }
     } catch {}
     let cancelled = false;
@@ -49,13 +47,12 @@ export default function ParticleField3D() {
     if (!wrap) return;
 
     const isMobile = window.innerWidth < 768;
-    // Adaptive count — higher counts now that visibility is boosted
-    const base =
-      tier >= 3 ? 320 : tier === 2 ? 220 : 130;
-    const count = Math.max(
-      70,
-      Math.round((isMobile ? base * 0.55 : base))
-    );
+    // Touch caps at ~50 particles — DOM span count matters for scroll cost.
+    // Desktop still scales generously with GPU tier.
+    const base = tier >= 3 ? 320 : tier === 2 ? 220 : 130;
+    const count = isTouch
+      ? Math.max(32, Math.min(50, Math.round(base * 0.2)))
+      : Math.max(70, Math.round(isMobile ? base * 0.55 : base));
 
     const w = window.innerWidth;
     const h = window.innerHeight;
@@ -122,28 +119,29 @@ export default function ParticleField3D() {
       tweens.push(tw);
     });
 
-    // Mouse/touch follows the perspective origin (smooth)
+    // Mouse follows the perspective origin on desktop. On touch we keep it
+    // anchored at center — no pointermove listener, no per-frame rAF.
+    let raf = 0;
     let ox = w / 2;
     let oy = h / 2;
     const onMove = (e: PointerEvent) => {
       ox = e.clientX;
       oy = e.clientY;
     };
-    window.addEventListener('pointermove', onMove, { passive: true });
-
-    // Smoothly interpolate perspective origin via rAF
-    let currentX = ox;
-    let currentY = oy;
-    let raf = 0;
-    const lerp = () => {
-      currentX += (ox - currentX) * 0.06;
-      currentY += (oy - currentY) * 0.06;
-      if (wrap) {
-        wrap.style.perspectiveOrigin = `${currentX.toFixed(1)}px ${currentY.toFixed(1)}px`;
-      }
+    if (!isTouch) {
+      window.addEventListener('pointermove', onMove, { passive: true });
+      let currentX = ox;
+      let currentY = oy;
+      const lerp = () => {
+        currentX += (ox - currentX) * 0.06;
+        currentY += (oy - currentY) * 0.06;
+        if (wrap) {
+          wrap.style.perspectiveOrigin = `${currentX.toFixed(1)}px ${currentY.toFixed(1)}px`;
+        }
+        raf = requestAnimationFrame(lerp);
+      };
       raf = requestAnimationFrame(lerp);
-    };
-    raf = requestAnimationFrame(lerp);
+    }
 
     // Pause when tab hidden
     const onVis = () => {
@@ -156,13 +154,13 @@ export default function ParticleField3D() {
     document.addEventListener('visibilitychange', onVis);
 
     return () => {
-      window.removeEventListener('pointermove', onMove);
+      if (!isTouch) window.removeEventListener('pointermove', onMove);
       document.removeEventListener('visibilitychange', onVis);
-      cancelAnimationFrame(raf);
+      if (raf) cancelAnimationFrame(raf);
       tweens.forEach((t) => t.kill());
       particles.forEach((c) => c.remove());
     };
-  }, [enabled, tier]);
+  }, [enabled, tier, isTouch]);
 
   if (!enabled) return null;
 

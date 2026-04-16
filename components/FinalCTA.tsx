@@ -6,8 +6,17 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 if (typeof window !== 'undefined') gsap.registerPlugin(ScrollTrigger);
 
+const fireBurst = (x: number, y: number, dist: number) => {
+  try {
+    window.dispatchEvent(
+      new CustomEvent('spiderspins:burst', { detail: { x, y, dist } })
+    );
+  } catch {}
+};
+
 export default function FinalCTA() {
   const sectionRef = useRef<HTMLElement | null>(null);
+  const buttonRef = useRef<HTMLAnchorElement | null>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -23,6 +32,79 @@ export default function FinalCTA() {
       });
     }, section);
     return () => ctx.revert();
+  }, []);
+
+  // IO-triggered arrival burst + periodic pulses while section is in view.
+  useEffect(() => {
+    const section = sectionRef.current;
+    const btn = buttonRef.current;
+    if (!section || !btn) return;
+
+    let fired = false;
+    let pulseTimer: ReturnType<typeof setInterval> | null = null;
+
+    const centerOfButton = () => {
+      const r = btn.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    };
+
+    const fireArrival = () => {
+      const { x, y } = centerOfButton();
+      fireBurst(x, y, 1400);
+      // follow-up burst 350ms later for a double-boom feel
+      setTimeout(() => {
+        const c = centerOfButton();
+        fireBurst(c.x, c.y - 40, 900);
+      }, 350);
+    };
+
+    const startPulses = () => {
+      if (pulseTimer) return;
+      pulseTimer = setInterval(() => {
+        const { x, y } = centerOfButton();
+        // small offset around the button so each pulse lands differently
+        const ox = (Math.random() - 0.5) * 260;
+        const oy = (Math.random() - 0.5) * 120;
+        fireBurst(x + ox, y + oy, 360 + Math.random() * 220);
+      }, 2600);
+    };
+
+    const stopPulses = () => {
+      if (pulseTimer) {
+        clearInterval(pulseTimer);
+        pulseTimer = null;
+      }
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            if (!fired) {
+              fired = true;
+              fireArrival();
+            }
+            startPulses();
+          } else {
+            stopPulses();
+          }
+        }
+      },
+      { threshold: 0.35 }
+    );
+    io.observe(section);
+
+    const onClick = () => {
+      const { x, y } = centerOfButton();
+      fireBurst(x, y, 1800);
+    };
+    btn.addEventListener('click', onClick);
+
+    return () => {
+      io.disconnect();
+      stopPulses();
+      btn.removeEventListener('click', onClick);
+    };
   }, []);
 
   return (
@@ -72,6 +154,7 @@ export default function FinalCTA() {
 
         <div className="cta-reveal mt-12 flex items-center justify-center">
           <a
+            ref={buttonRef}
             href="#play"
             className="hover-target relative inline-flex items-center gap-3 px-10 py-5 rounded-md bg-venom hover:bg-strike transition-all font-display uppercase tracking-[0.22em] text-sm text-silk overflow-hidden"
             style={{

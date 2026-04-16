@@ -20,6 +20,7 @@ import WithdrawalLimits from '@/components/WithdrawalLimits';
 import SilkBoutique from '@/components/SilkBoutique';
 import SocialShare from '@/components/SocialShare';
 import NeuralWebBackdrop from '@/components/NeuralWebBackdrop';
+import MorphingSpiderForms from '@/components/MorphingSpiderForms';
 
 // ⚠ NeuralWebBackdrop — OPT-IN only. Default OFF. To enable in production:
 //    1. Set NEXT_PUBLIC_NEURAL_WEB=1 in Vercel env vars, OR
@@ -132,6 +133,7 @@ export default function HomePage() {
       <PromoBanner />
 
       <BenefitsSlider />
+      <MorphingSpiderForms />
       <GameCards />
       <StatsCounters />
       <WebVault />

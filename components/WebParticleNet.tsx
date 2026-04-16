@@ -2,15 +2,15 @@
 
 import { useEffect, useRef } from 'react';
 
-// Connecting-particle "constellation". Two modes:
-//   • desktop  — 78 nodes, silk-white, mouse pulls + red threads to cursor
-//   • mobile   — 45 nodes, red embers drifting upward, thin silk links, no
-//                pointer interaction (touch users can't hover anyway)
+// Connecting-particle "constellation". Unified visual on both form factors —
+// silk-white nodes with silk threads. Mobile just has a lower count + tap
+// bursts (radial push) instead of cursor pull.
 //
 // Single 2D canvas, one rAF loop. Auto-pauses via IntersectionObserver when
 // scrolled out of the hero, and on tab hide. Reduced-motion users get nothing.
 
 type P = { x: number; y: number; vx: number; vy: number };
+type Burst = { x: number; y: number; t: number };
 
 export default function WebParticleNet() {
   const wrapRef = useRef<HTMLDivElement | null>(null);
@@ -30,18 +30,17 @@ export default function WebParticleNet() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Mode-specific tunings
-    const COUNT = touch ? 45 : 78;
-    const LINK_DIST = touch ? 105 : 130;
+    // Unified palette: silk-white nodes + silk threads.
+    // Mobile reduces count + link distance; no cursor interaction but tap
+    // triggers a radial burst that nudges nearby nodes outward.
+    const COUNT = touch ? 36 : 78;
+    const LINK_DIST = touch ? 110 : 130;
     const MOUSE_DIST = 190;
-    // Mobile = red embers; desktop = silk-white nodes
-    const NODE_COLOR = touch ? 'rgba(239,68,68,0.85)' : 'rgba(232,232,232,0.7)';
-    const LINK_COLOR = touch
-      ? (a: number) => `rgba(185,28,28,${a.toFixed(3)})`
-      : (a: number) => `rgba(200,200,200,${a.toFixed(3)})`;
-    const NODE_RADIUS = touch ? 1.6 : 1.4;
-    const LINK_WIDTH = touch ? 0.5 : 0.55;
-    const LINK_ALPHA_MAX = touch ? 0.42 : 0.35;
+    const NODE_COLOR = 'rgba(232,232,232,0.72)';
+    const LINK_COLOR = (a: number) => `rgba(200,200,200,${a.toFixed(3)})`;
+    const NODE_RADIUS = 1.4;
+    const LINK_WIDTH = 0.55;
+    const LINK_ALPHA_MAX = touch ? 0.38 : 0.35;
 
     const dpr = Math.min(window.devicePixelRatio || 1, touch ? 1.5 : 2);
     let w = 0;
@@ -64,13 +63,11 @@ export default function WebParticleNet() {
       particles.push({
         x: Math.random() * w,
         y: Math.random() * h,
-        vx: (Math.random() - 0.5) * (touch ? 0.18 : 0.32),
-        // Mobile = upward drift like embers; desktop = random drift
-        vy: touch
-          ? -(0.12 + Math.random() * 0.18)
-          : (Math.random() - 0.5) * 0.32,
+        vx: (Math.random() - 0.5) * (touch ? 0.22 : 0.32),
+        vy: (Math.random() - 0.5) * (touch ? 0.22 : 0.32),
       });
     }
+    const bursts: Burst[] = [];
 
     let mouseX = -9999;
     let mouseY = -9999;
@@ -96,23 +93,19 @@ export default function WebParticleNet() {
       }
       ctx.clearRect(0, 0, w, h);
 
+      // decay tap bursts
+      for (let i = bursts.length - 1; i >= 0; i--) {
+        bursts[i].t += 1;
+        if (bursts[i].t > 60) bursts.splice(i, 1);
+      }
+
       for (const p of particles) {
         p.x += p.vx;
         p.y += p.vy;
-        // wrap edges (mobile re-spawns at bottom for upward ember effect)
-        if (touch) {
-          if (p.y < -10) {
-            p.y = h + 10;
-            p.x = Math.random() * w;
-          }
-          if (p.x < -10) p.x = w + 10;
-          if (p.x > w + 10) p.x = -10;
-        } else {
-          if (p.x < -10) p.x = w + 10;
-          if (p.x > w + 10) p.x = -10;
-          if (p.y < -10) p.y = h + 10;
-          if (p.y > h + 10) p.y = -10;
-        }
+        if (p.x < -10) p.x = w + 10;
+        if (p.x > w + 10) p.x = -10;
+        if (p.y < -10) p.y = h + 10;
+        if (p.y > h + 10) p.y = -10;
 
         // mouse pull (desktop only)
         if (!touch && mouseX > -1000) {
@@ -126,17 +119,24 @@ export default function WebParticleNet() {
           }
         }
 
+        // tap-burst push (touch): radial shove, decays with burst age
+        for (const b of bursts) {
+          const bdx = p.x - b.x;
+          const bdy = p.y - b.y;
+          const bd = Math.hypot(bdx, bdy);
+          const reach = 150;
+          if (bd < reach && bd > 0) {
+            const decay = 1 - b.t / 60;
+            const f = (1 - bd / reach) * 1.2 * decay;
+            p.x += (bdx / bd) * f;
+            p.y += (bdy / bd) * f;
+          }
+        }
+
         ctx.fillStyle = NODE_COLOR;
         ctx.beginPath();
         ctx.arc(p.x, p.y, NODE_RADIUS, 0, Math.PI * 2);
         ctx.fill();
-        // mobile embers: soft glow halo
-        if (touch) {
-          ctx.fillStyle = 'rgba(239,68,68,0.18)';
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, 4.5, 0, Math.PI * 2);
-          ctx.fill();
-        }
       }
 
       // inter-particle silk threads
@@ -222,7 +222,26 @@ export default function WebParticleNet() {
     };
     document.addEventListener('visibilitychange', onVis);
     window.addEventListener('resize', resize);
-    if (!touch) {
+
+    // Tap-burst listener (touch only) — fires a radial shove at tap point and
+    // piggy-backs on the existing spiderspins:burst event so ConfettiCannon
+    // gets a small red dew celebration.
+    const onTap = (e: PointerEvent) => {
+      const r = wrap.getBoundingClientRect();
+      if (
+        e.clientX < r.left ||
+        e.clientX > r.right ||
+        e.clientY < r.top ||
+        e.clientY > r.bottom
+      ) {
+        return;
+      }
+      bursts.push({ x: e.clientX - r.left, y: e.clientY - r.top, t: 0 });
+      if (!raf && inView) raf = requestAnimationFrame(tick);
+    };
+    if (touch) {
+      wrap.addEventListener('pointerdown', onTap);
+    } else {
       window.addEventListener('pointermove', onMove);
       window.addEventListener('pointerleave', onLeave);
     }
@@ -232,7 +251,9 @@ export default function WebParticleNet() {
       io.disconnect();
       document.removeEventListener('visibilitychange', onVis);
       window.removeEventListener('resize', resize);
-      if (!touch) {
+      if (touch) {
+        wrap.removeEventListener('pointerdown', onTap);
+      } else {
         window.removeEventListener('pointermove', onMove);
         window.removeEventListener('pointerleave', onLeave);
       }
