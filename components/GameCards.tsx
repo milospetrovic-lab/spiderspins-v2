@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import FunModeModal from './FunModeModal';
@@ -259,16 +260,19 @@ function Card({
           : '0 10px 30px -20px rgba(0,0,0,0.8)',
       }}
     >
-      {/* art — real image if available, else generated SVG */}
+      {/* art — Next Image (auto WebP/AVIF + responsive) when available, else generated SVG */}
       {game.image ? (
         <>
-          <img
+          <Image
             src={game.image}
             alt=""
             aria-hidden
-            className="absolute inset-0 w-full h-full object-cover opacity-75 transition-opacity duration-400 group-hover:opacity-90"
+            fill
+            sizes={isFeatured
+              ? '(max-width: 768px) 100vw, 1100px'
+              : '(max-width: 768px) 100vw, 360px'}
+            className="object-cover opacity-75 transition-opacity duration-400 group-hover:opacity-90"
             loading="lazy"
-            decoding="async"
           />
           {/* brand-tint overlay so provider art reads as ours */}
           <div

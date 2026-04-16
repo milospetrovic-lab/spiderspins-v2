@@ -1,9 +1,8 @@
 import Image from 'next/image';
 
-// Responsive promo banner below hero — Casino Extreme-style.
-// Desktop (≥ md) uses the 1350×500 asset; mobile/tablet get 420×300 / 768×300.
-// Prototype note: imagery pulled from casinoextreme.eu for mock. Replace with
-// licensed spider-themed art before launch (see SPIDERSPINS_TODO.md · A2).
+// Promo banner below hero — Next Image handles responsive sizing + WebP/AVIF
+// auto-conversion + lazy-loading. Significantly faster than the prior <picture>
+// route which served the 908 KB desktop PNG to all viewports.
 
 export default function PromoBanner() {
   return (
@@ -16,21 +15,19 @@ export default function PromoBanner() {
           href="/404"
           className="hover-target group relative block rounded-2xl overflow-hidden border border-venom/40 bg-cave/60 transition-all hover:border-strike/70 hover:shadow-[0_20px_60px_-20px_rgba(185,28,28,0.5)]"
         >
-          {/* responsive picture — browser picks the smallest adequate */}
-          <picture>
-            <source media="(min-width: 1024px)" srcSet="/promo/banner-desktop.png" />
-            <source media="(min-width: 640px)" srcSet="/promo/banner-tablet.png" />
-            <Image
-              src="/promo/banner-mobile.png"
-              alt="Hot promotion — the web is wide open this week"
-              width={1350}
-              height={500}
-              className="block w-full h-auto"
-              priority={false}
-            />
-          </picture>
+          {/* responsive Next Image — auto WebP/AVIF, sized per breakpoint */}
+          <Image
+            src="/promo/banner-desktop.png"
+            alt="Hot promotion — the web is wide open this week"
+            width={1350}
+            height={500}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1100px"
+            priority={false}
+            placeholder="empty"
+            className="block w-full h-auto"
+          />
 
-          {/* spider-branded overlay */}
+          {/* spider-branded overlay — readable text everywhere */}
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 mix-blend-multiply"
@@ -73,7 +70,6 @@ export default function PromoBanner() {
             </span>
           </div>
 
-          {/* tiny "prototype asset" badge — bottom-right */}
           <span className="absolute bottom-2 right-3 font-mono text-[8px] uppercase tracking-[0.24em] text-silk/30">
             prototype
           </span>

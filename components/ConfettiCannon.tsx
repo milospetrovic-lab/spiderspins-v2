@@ -132,6 +132,15 @@ export default function ConfettiCannon({
     const svg = svgRef.current;
     if (!host || !canvas || !svg) return;
 
+    // Touch devices: skip the global drag-to-draw listeners entirely.
+    // The pointermove handler firing on every scroll-touch was the main
+    // cause of the post-hero scroll lag on mobile. Programmatic burst
+    // (via window CustomEvent 'spiderspins:burst') still works.
+    let isTouchDevice = false;
+    try {
+      isTouchDevice = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+    } catch {}
+
     const ctx = canvas.getContext('2d')!;
     const dpr = Math.min(window.devicePixelRatio, 2);
 
@@ -489,18 +498,25 @@ export default function ConfettiCannon({
       explode(x - r.left, y - r.top, dist);
     };
 
-    window.addEventListener('pointerdown', onPointerDown);
-    window.addEventListener('pointermove', onPointerMove);
-    window.addEventListener('pointerup', endDrag);
-    window.addEventListener('pointercancel', endDrag);
+    // Only attach drag listeners on non-touch devices.
+    if (!isTouchDevice) {
+      window.addEventListener('pointerdown', onPointerDown);
+      window.addEventListener('pointermove', onPointerMove);
+      window.addEventListener('pointerup', endDrag);
+      window.addEventListener('pointercancel', endDrag);
+    }
+    // Burst listener stays on every device so the cashier "Paid" celebration
+    // and 404 mini-game victory still trigger confetti.
     window.addEventListener('spiderspins:burst' as any, onBurst);
 
     return () => {
       window.removeEventListener('resize', resize);
-      window.removeEventListener('pointerdown', onPointerDown);
-      window.removeEventListener('pointermove', onPointerMove);
-      window.removeEventListener('pointerup', endDrag);
-      window.removeEventListener('pointercancel', endDrag);
+      if (!isTouchDevice) {
+        window.removeEventListener('pointerdown', onPointerDown);
+        window.removeEventListener('pointermove', onPointerMove);
+        window.removeEventListener('pointerup', endDrag);
+        window.removeEventListener('pointercancel', endDrag);
+      }
       window.removeEventListener('spiderspins:burst' as any, onBurst);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };

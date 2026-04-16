@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 type Variant = {
   left: string;
@@ -57,10 +57,40 @@ export default function SpiderRain() {
     []
   );
 
+  const wrapRef = useRef<HTMLDivElement | null>(null);
+  const [inView, setInView] = useState(true);
+
+  // Pause CSS animations when scrolled out of hero — major mobile perf win,
+  // these were running forever even after user left the section.
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) setInView(e.isIntersecting);
+      },
+      { rootMargin: '50px' }
+    );
+    io.observe(el);
+    // Also pause on tab hide
+    const onVis = () => {
+      if (document.hidden) setInView(false);
+    };
+    document.addEventListener('visibilitychange', onVis);
+    return () => {
+      io.disconnect();
+      document.removeEventListener('visibilitychange', onVis);
+    };
+  }, []);
+
   return (
     <div
+      ref={wrapRef}
       aria-hidden
-      className="pointer-events-none absolute inset-0 overflow-hidden z-[5]"
+      className={[
+        'pointer-events-none absolute inset-0 overflow-hidden z-[5]',
+        inView ? '' : 'is-paused',
+      ].join(' ')}
     >
       {spiders.map((s, i) => (
         <div

@@ -16,7 +16,6 @@ import HeroScrollTransition from '@/components/HeroScrollTransition';
 import HeroBottomDrip from '@/components/HeroBottomDrip';
 import PromoBanner from '@/components/PromoBanner';
 import WithdrawalLimits from '@/components/WithdrawalLimits';
-import SEOContent from '@/components/SEOContent';
 import SilkBoutique from '@/components/SilkBoutique';
 import SocialShare from '@/components/SocialShare';
 import NeuralWebBackdrop from '@/components/NeuralWebBackdrop';
@@ -116,8 +115,6 @@ export default function HomePage() {
 
       <BenefitsSlider />
       <GameCards />
-      {/* A7 · SEO long-form (collapsed by default) */}
-      <SEOContent />
       <StatsCounters />
       <WebVault />
       <VIPTiers />
