@@ -19,46 +19,48 @@ type Species = {
   accent: number; // rim/accent
 };
 
+// Per-tier colors — spec values (cold → warm → gold).
+// Widow color stays LOCKED per spec.
 const SPECIES: Species[] = [
   {
     key: 'hatchling',
     name: 'Hatchling',
     tier: 'TIER 1 · FIRST THREAD',
-    role: 'The orb. Small, patient, finding the wind.',
-    color: 0x9a9a9a, // shadow → silk-dim
-    accent: 0xc4a265,
+    role: 'Patient hunter. No web. Eight eyes, watching.',
+    color: 0xa8a8b0, // cold silver
+    accent: 0xe8e8e8,
   },
   {
     key: 'hunter',
     name: 'Hunter',
     tier: 'TIER 2 · THE CHASE',
-    role: 'The strike helix. Quick footfalls, quicker fangs.',
-    color: 0xef4444, // strike
-    accent: 0xffb4b4,
+    role: 'Classic round web. Symmetry. The textbook spider.',
+    color: 0xd97272, // light red (first weaving)
+    accent: 0xef4444,
   },
   {
     key: 'weaver',
     name: 'Weaver',
     tier: 'TIER 3 · THE SPIRAL',
-    role: 'The orb web. Geometry as patience.',
-    color: 0xe8e8e8, // silk
-    accent: 0xef4444,
+    role: 'Architect. The funnel tunnels into the dark.',
+    color: 0xb91c1c, // venom red (deepening)
+    accent: 0x2a0505,
   },
   {
     key: 'widow',
     name: 'Widow',
     tier: 'TIER 4 · THE MARK',
-    role: 'The hourglass. Eight legs of measured intent.',
-    color: 0xb91c1c, // venom
+    role: 'The flagship. Red hourglass. Respected.',
+    color: 0xef4444, // locked per spec
     accent: 0xef4444,
   },
   {
     key: 'empress',
     name: 'Empress',
     tier: 'TIER 5 · THE THRONE',
-    role: 'The infinite loop. Every thread comes home.',
-    color: 0xc4a265, // fang
-    accent: 0xef4444,
+    role: 'Largest spider on earth. Golden silk. Bespoke.',
+    color: 0xffd700, // pure gold
+    accent: 0xfff4a3,
   },
 ];
 
@@ -67,59 +69,147 @@ const SPECIES: Species[] = [
 const SCALE = 160;
 
 function shapeHatchling(N: number): Float32Array {
-  // Fibonacci sphere lattice — compact orb
+  // Wolf spider eight eyes — 2-2-2-2 arrangement.
+  // 8 circular clusters, weighted toward the two huge anterior-median eyes.
   const arr = new Float32Array(N * 3);
-  const g = Math.PI * (3 - Math.sqrt(5));
-  for (let i = 0; i < N; i++) {
-    const y = 1 - (i / (N - 1)) * 2;
-    const r = Math.sqrt(1 - y * y);
-    const t = g * i;
-    arr[i * 3] = Math.cos(t) * r * SCALE * 0.75;
-    arr[i * 3 + 1] = y * SCALE * 0.75;
-    arr[i * 3 + 2] = Math.sin(t) * r * SCALE * 0.75;
+  const clusters = [
+    // cluster center x, y, z (scaled), radius (scaled), particle weight
+    { cx: -0.15, cy:  0.35, r: 0.06, w: 180 / 3000 },  // row 1: small posterior
+    { cx:  0.15, cy:  0.35, r: 0.06, w: 180 / 3000 },
+    { cx: -0.35, cy:  0.12, r: 0.09, w: 320 / 3000 },  // row 2: mid wide
+    { cx:  0.35, cy:  0.12, r: 0.09, w: 320 / 3000 },
+    { cx: -0.18, cy: -0.08, r: 0.08, w: 280 / 3000 },  // row 3: mid close
+    { cx:  0.18, cy: -0.08, r: 0.08, w: 280 / 3000 },
+    { cx: -0.22, cy: -0.32, r: 0.14, w: 720 / 3000 },  // row 4: HUGE anterior
+    { cx:  0.22, cy: -0.32, r: 0.14, w: 720 / 3000 },
+  ];
+  // Normalize weights so counts sum to N
+  const totW = clusters.reduce((s, c) => s + c.w, 0);
+  const counts = clusters.map((c) => Math.round((c.w / totW) * N));
+  // Adjust for rounding
+  let total = counts.reduce((a, b) => a + b, 0);
+  while (total < N) { counts[7]++; total++; }
+  while (total > N) { counts[0]--; total--; }
+
+  let idx = 0;
+  for (let k = 0; k < clusters.length; k++) {
+    const c = clusters[k];
+    const cxS = c.cx * SCALE * 1.3;
+    const cyS = c.cy * SCALE * 1.3;
+    const rS = c.r * SCALE * 1.3;
+    for (let i = 0; i < counts[k]; i++) {
+      // 70% polar random disc, 30% gaussian-tight at center (pupil glow)
+      const isPupil = Math.random() < 0.3;
+      const ang = Math.random() * Math.PI * 2;
+      let r;
+      if (isPupil) {
+        // gaussian-ish: sum of uniform + uniform gives triangular distribution near 0
+        r = (Math.random() + Math.random()) * 0.25 * rS;
+      } else {
+        // uniform disc: sqrt for even density
+        r = Math.sqrt(Math.random()) * rS;
+      }
+      arr[idx * 3] = cxS + Math.cos(ang) * r;
+      arr[idx * 3 + 1] = cyS + Math.sin(ang) * r;
+      // Slight forward offset on largest eyes so they catch light forward
+      const depth = k >= 6 ? 8 : 0;
+      arr[idx * 3 + 2] = depth + (Math.random() - 0.5) * 4;
+      idx++;
+    }
   }
   return arr;
 }
 
 function shapeHunter(N: number): Float32Array {
-  // Double helix — two intertwined strike strands
+  // Orb web: center hub + 8 radial spokes + 5 concentric rings.
+  // Spec: 80 hub + 1000 spokes + 1920 rings = 3000. Scaled proportionally to N.
   const arr = new Float32Array(N * 3);
-  const turns = 5;
-  for (let i = 0; i < N; i++) {
-    const t = i / (N - 1);
-    const branch = i % 2;
-    const ang = t * turns * Math.PI * 2 + (branch ? Math.PI : 0);
-    const r = SCALE * 0.55 * (0.75 + Math.sin(t * Math.PI) * 0.25);
-    arr[i * 3] = Math.cos(ang) * r;
-    arr[i * 3 + 1] = (t - 0.5) * SCALE * 1.6;
-    arr[i * 3 + 2] = Math.sin(ang) * r;
+  const hubShare = 80 / 3000;
+  const spokeShare = 1000 / 3000;
+  const ringShare = 1920 / 3000;
+  const nHub = Math.max(24, Math.round(N * hubShare));
+  const nSpoke = Math.round(N * spokeShare);
+  const nRing = N - nHub - nSpoke;
+
+  let idx = 0;
+  // Center hub — tight cluster
+  for (let i = 0; i < nHub; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const r = Math.random() * SCALE * 0.03;
+    arr[idx * 3] = Math.cos(a) * r;
+    arr[idx * 3 + 1] = Math.sin(a) * r;
+    arr[idx * 3 + 2] = (Math.random() - 0.5) * 6;
+    idx++;
+  }
+  // 8 spokes from center to outer edge
+  const NUM_SPOKES = 8;
+  const perSpoke = Math.floor(nSpoke / NUM_SPOKES);
+  for (let s = 0; s < NUM_SPOKES; s++) {
+    const ang = (s / NUM_SPOKES) * Math.PI * 2;
+    for (let i = 0; i < perSpoke; i++) {
+      const t = i / perSpoke;
+      const r = (0.03 + t * 0.60) * SCALE;
+      const jitter = (Math.random() - 0.5) * 0.008 * SCALE;
+      const perpX = -Math.sin(ang) * jitter;
+      const perpY = Math.cos(ang) * jitter;
+      arr[idx * 3] = Math.cos(ang) * r + perpX;
+      arr[idx * 3 + 1] = Math.sin(ang) * r + perpY;
+      arr[idx * 3 + 2] = (Math.random() - 0.5) * 6;
+      idx++;
+    }
+  }
+  // 5 concentric rings (radii 0.15..0.63 of scale)
+  const RADII = [0.15, 0.27, 0.39, 0.51, 0.63];
+  const perRing = Math.floor((N - idx) / RADII.length);
+  for (let ri = 0; ri < RADII.length; ri++) {
+    const baseR = RADII[ri] * SCALE;
+    const count = ri === RADII.length - 1 ? (N - idx) : perRing;
+    for (let i = 0; i < count; i++) {
+      const ang = (i / count) * Math.PI * 2 + Math.random() * 0.04;
+      const r = baseR + (Math.random() - 0.5) * 0.008 * SCALE;
+      arr[idx * 3] = Math.cos(ang) * r;
+      arr[idx * 3 + 1] = Math.sin(ang) * r;
+      arr[idx * 3 + 2] = (Math.random() - 0.5) * 8;
+      idx++;
+      if (idx >= N) break;
+    }
+    if (idx >= N) break;
+  }
+  // Pad any leftover
+  while (idx < N) {
+    const ang = Math.random() * Math.PI * 2;
+    arr[idx * 3] = Math.cos(ang) * SCALE * 0.6;
+    arr[idx * 3 + 1] = Math.sin(ang) * SCALE * 0.6;
+    arr[idx * 3 + 2] = 0;
+    idx++;
   }
   return arr;
 }
 
 function shapeWeaver(N: number): Float32Array {
-  // Orb web — 10 radial spokes × logarithmic spiral winding between them
+  // Funnel-web: descending cone narrowing to a vanishing point.
+  // Mouth at top (wide), throat at bottom (tight). Particles distributed
+  // along concentric rings down the cone wall, with more density near the mouth.
   const arr = new Float32Array(N * 3);
-  const spokes = 10;
-  // ~40% of points live on spokes, rest spiral
-  const spokePts = Math.floor(N * 0.4);
-  for (let i = 0; i < spokePts; i++) {
-    const s = i % spokes;
-    const t = Math.floor(i / spokes) / Math.floor(spokePts / spokes);
-    const ang = (s / spokes) * Math.PI * 2;
-    const r = t * SCALE * 0.95;
-    arr[i * 3] = Math.cos(ang) * r;
-    arr[i * 3 + 1] = Math.sin(ang) * r;
-    arr[i * 3 + 2] = (Math.random() - 0.5) * 14;
-  }
-  for (let i = spokePts; i < N; i++) {
-    const t = (i - spokePts) / (N - spokePts);
-    // log-spiral winding with ~8 revolutions
-    const ang = t * Math.PI * 2 * 8;
-    const r = SCALE * (0.08 + t * 0.9);
-    arr[i * 3] = Math.cos(ang) * r;
-    arr[i * 3 + 1] = Math.sin(ang) * r;
-    arr[i * 3 + 2] = (Math.random() - 0.5) * 20;
+  const mouthR = SCALE * 0.85;   // top of the funnel
+  const throatR = SCALE * 0.05;  // bottom vanishing point
+  const height = SCALE * 1.4;
+  const yTop = height * 0.45;
+  const yBottom = -height * 0.55;
+
+  for (let i = 0; i < N; i++) {
+    // Biased toward the mouth: t=0 is throat, t=1 is mouth
+    // sqrt(random) biases toward 1 (mouth) for denser rim
+    const t = Math.pow(Math.random(), 0.55);
+    const y = yBottom + t * (yTop - yBottom);
+    // Radius scales with t (throat -> mouth). Slight inward curl for the cone.
+    const r = throatR + t * (mouthR - throatR);
+    const ang = Math.random() * Math.PI * 2;
+    // Tiny radial jitter for organic silk feel
+    const jr = (Math.random() - 0.5) * 0.02 * SCALE;
+    arr[i * 3] = Math.cos(ang) * (r + jr);
+    arr[i * 3 + 1] = y;
+    arr[i * 3 + 2] = Math.sin(ang) * (r + jr);
   }
   return arr;
 }
@@ -202,16 +292,92 @@ function shapeWidow(N: number): Float32Array {
 }
 
 function shapeEmpress(N: number): Float32Array {
-  // Torus — the queen's looped throne
+  // Crown of 8 bezier legs: base band (rim) + 8 curved legs rising +
+  // 4 tall peak tips + 4 short valley bridges. Alt tall/short creates the crown silhouette.
   const arr = new Float32Array(N * 3);
-  const R = SCALE * 0.62;
-  const r = SCALE * 0.22;
-  for (let i = 0; i < N; i++) {
-    const u = Math.random() * Math.PI * 2;
-    const v = Math.random() * Math.PI * 2;
-    arr[i * 3] = (R + r * Math.cos(v)) * Math.cos(u);
-    arr[i * 3 + 1] = r * Math.sin(v);
-    arr[i * 3 + 2] = (R + r * Math.cos(v)) * Math.sin(u);
+  const CW = SCALE * 1.3;          // crown width
+  const CH = SCALE * 0.9;           // crown height
+  const BASE_Y = -SCALE * 0.3;
+
+  // Spec proportions: 600 base + 1600 legs + 400 peaks + 400 valleys = 3000
+  const nBase = Math.round(N * 0.2);
+  const nLeg = Math.floor((N * 0.533) / 8);
+  const legsTotal = nLeg * 8;
+  const nPeak = Math.floor((N * 0.133) / 4);
+  const peaksTotal = nPeak * 4;
+  const nValley = Math.floor((N * 0.133) / 4);
+
+  let idx = 0;
+
+  // Base band (thin horizontal rim)
+  for (let i = 0; i < nBase; i++) {
+    const t = Math.random();
+    const x = -CW / 2 + t * CW;
+    const y = BASE_Y + (Math.random() - 0.5) * (SCALE * 0.06);
+    const z = (Math.random() - 0.5) * SCALE * 0.08;
+    arr[idx * 3] = x;
+    arr[idx * 3 + 1] = y;
+    arr[idx * 3 + 2] = z;
+    idx++;
+  }
+
+  // 8 legs rising via bezier. Legs at even indices = TALL, odd = SHORT.
+  for (let leg = 0; leg < 8; leg++) {
+    const isTall = leg % 2 === 0;
+    const xStart = -CW / 2 + (leg / 7) * CW;
+    const yTop = BASE_Y + (isTall ? CH : CH * 0.55);
+    // Slight outward arc via control point
+    const ctrlX = xStart + (leg < 4 ? -SCALE * 0.05 : SCALE * 0.05);
+    const ctrlY = BASE_Y + CH * 0.5;
+    for (let i = 0; i < nLeg; i++) {
+      const t = i / Math.max(nLeg - 1, 1);
+      const omt = 1 - t;
+      const x = omt * omt * xStart + 2 * omt * t * ctrlX + t * t * xStart;
+      const y = omt * omt * BASE_Y + 2 * omt * t * ctrlY + t * t * yTop;
+      const jx = (Math.random() - 0.5) * SCALE * 0.008;
+      const jy = (Math.random() - 0.5) * SCALE * 0.008;
+      arr[idx * 3] = x + jx;
+      arr[idx * 3 + 1] = y + jy;
+      arr[idx * 3 + 2] = (Math.random() - 0.5) * SCALE * 0.05;
+      idx++;
+    }
+  }
+
+  // Tall peak tips — bright clusters at every other leg's top
+  const tallIdxs = [0, 2, 4, 6];
+  for (const peakLeg of tallIdxs) {
+    const x = -CW / 2 + (peakLeg / 7) * CW;
+    const y = BASE_Y + CH;
+    for (let i = 0; i < nPeak; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const r = Math.random() * SCALE * 0.04;
+      arr[idx * 3] = x + Math.cos(a) * r;
+      arr[idx * 3 + 1] = y + Math.sin(a) * r * 0.7;
+      arr[idx * 3 + 2] = (Math.random() - 0.5) * SCALE * 0.05;
+      idx++;
+    }
+  }
+
+  // Short valley bridges — 4 between the tall peaks
+  for (let vi = 0; vi < 4; vi++) {
+    const x = -CW / 2 + ((vi * 2 + 1) / 7) * CW;
+    const y = BASE_Y + CH * 0.55;
+    for (let i = 0; i < nValley; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const r = Math.random() * SCALE * 0.03;
+      arr[idx * 3] = x + Math.cos(a) * r;
+      arr[idx * 3 + 1] = y + Math.sin(a) * r * 0.7;
+      arr[idx * 3 + 2] = (Math.random() - 0.5) * SCALE * 0.04;
+      idx++;
+    }
+  }
+
+  // Pad any remainder into the rim
+  while (idx < N) {
+    arr[idx * 3] = (Math.random() - 0.5) * CW;
+    arr[idx * 3 + 1] = BASE_Y + (Math.random() - 0.5) * SCALE * 0.05;
+    arr[idx * 3 + 2] = 0;
+    idx++;
   }
   return arr;
 }
@@ -283,7 +449,12 @@ export default function MorphingSpiderForms() {
     const host = hostRef.current;
     if (!host) return;
 
-    const N = tier >= 3 ? 5000 : tier === 2 ? 3200 : 1800;
+    // Per spec: desktop target 3000, mobile auto-reduce to 1500 under 768px.
+    // GPU tier scales inside that envelope.
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const N = isMobile
+      ? (tier >= 3 ? 1500 : tier === 2 ? 1200 : 900)
+      : (tier >= 3 ? 3000 : tier === 2 ? 2400 : 1600);
     const positions = new Float32Array(N * 3);
     const targets = new Float32Array(N * 3);
     const controls = new Float32Array(N * 3);

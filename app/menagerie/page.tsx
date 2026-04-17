@@ -188,10 +188,13 @@ export default function MenageriePage() {
           The Widow is our flagship. She is not alone. Each VIP tier is a different species — patient, deliberate, true to nature. Every season unlocks one more. Players don&apos;t just rank up. They meet a new creature.
         </p>
 
-        {/* Tier ladder */}
-        <p className="font-mono text-[10px] uppercase tracking-[0.34em] text-strike mb-5">
+        {/* Tier ladder — primary heading for the 5-VIP story */}
+        <p className="font-mono text-[10px] uppercase tracking-[0.34em] text-strike mb-3">
           The Spider Lifecycle · five ranks
         </p>
+        <h2 className="font-display font-black text-silk leading-[0.95] text-[clamp(1.8rem,5vw,3.2rem)] mb-8">
+          Five species. <span className="text-strike">One web.</span>
+        </h2>
         <div className="space-y-6 mb-16">
           {tierSpecies.map((s) => (
             <SpeciesCard key={s.variant} s={s} />
