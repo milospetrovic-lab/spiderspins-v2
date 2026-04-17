@@ -15,16 +15,26 @@ export default function PromoBanner() {
           href="/404"
           className="hover-target group relative block rounded-2xl overflow-hidden border border-venom/40 bg-cave/60 transition-all hover:border-strike/70 hover:shadow-[0_20px_60px_-20px_rgba(185,28,28,0.5)]"
         >
-          {/* responsive Next Image — auto WebP/AVIF, sized per breakpoint */}
+          {/* Art-directed: mobile gets portrait crop, desktop gets wide crop */}
+          <Image
+            src="/promo/banner-mobile.png"
+            alt="Hot promotion — the web is wide open this week"
+            width={640}
+            height={640}
+            sizes="100vw"
+            priority={false}
+            placeholder="empty"
+            className="block w-full h-auto md:hidden"
+          />
           <Image
             src="/promo/banner-desktop.png"
             alt="Hot promotion — the web is wide open this week"
             width={1350}
             height={500}
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1100px"
+            sizes="(max-width: 1024px) 90vw, 1100px"
             priority={false}
             placeholder="empty"
-            className="block w-full h-auto"
+            className="hidden md:block w-full h-auto"
           />
 
           {/* spider-branded overlay — readable text everywhere */}
@@ -46,8 +56,8 @@ export default function PromoBanner() {
           <span className="pointer-events-none absolute bottom-3 left-3 w-5 h-5 border-b border-l border-strike/70" />
           <span className="pointer-events-none absolute bottom-3 right-3 w-5 h-5 border-b border-r border-strike/70" />
 
-          {/* content */}
-          <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-12 max-w-2xl">
+          {/* content — on mobile sits at bottom over gradient; on desktop centered left */}
+          <div className="absolute inset-0 flex flex-col justify-end md:justify-center px-6 md:px-12 pb-10 md:pb-0 max-w-2xl">
             <div className="flex items-center gap-2 mb-3 md:mb-4">
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-strike shadow-[0_0_10px_#ef4444] animate-pulse" />
               <span className="font-mono text-[9px] md:text-[11px] uppercase tracking-[0.3em] text-strike">

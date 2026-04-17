@@ -50,7 +50,7 @@ export default function Preloader() {
       return;
     }
 
-    const total = 1700;
+    const total = 1200;
     const start = performance.now();
     let raf = 0;
     const tick = () => {
