@@ -117,7 +117,7 @@ export default async function OG() {
             </span>
             <span style={{ fontSize: 14, color: '#444' }}>·</span>
             <span style={{ fontSize: 14, letterSpacing: '0.32em', textTransform: 'uppercase', color: '#c4a265' }}>
-              500+ games · 96.1% RTP
+              500+ games · 5 species
             </span>
           </div>
           {/* Mini spider mark */}

@@ -32,7 +32,7 @@ export default function TermsPage() {
       </section>
       <section>
         <h2 className="font-display font-extrabold text-silk text-xl md:text-2xl mb-3">5. The math is the math</h2>
-        <p>Every game's RTP and volatility rating is published on its game page. Provider RNGs are independently audited (certificates linked from each game). We do not manipulate outcomes. You can win, you can lose, and the long-run distribution is exactly what the math predicts. The web is patient on both sides.</p>
+        <p>Volatility ratings and payout profiles are published on every game page. Provider RNGs are independently audited (certificates linked from each game). We do not manipulate outcomes. You can win, you can lose, and the long-run distribution is exactly what the math predicts. The web is patient on both sides.</p>
       </section>
       <section>
         <h2 className="font-display font-extrabold text-silk text-xl md:text-2xl mb-3">6. Disputes</h2>

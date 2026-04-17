@@ -11,11 +11,11 @@ const VENOM = 0xb91c1c;
 const benefits = [
   {
     num: '01',
-    headline: '96.1% Avg RTP',
-    tagline: 'The math is transparent.',
+    headline: 'Patient Pacing',
+    tagline: 'No countdowns. No panic.',
     body:
-      'Every RTP, volatility rating, and payout profile is published. No hidden choke points.',
-    stat: { label: 'Avg RTP', value: '96.1%' },
+      'Volatility rating and payout profile are published on every game. No hidden choke points.',
+    stat: { label: 'Style', value: 'Calm' },
   },
   {
     num: '02',

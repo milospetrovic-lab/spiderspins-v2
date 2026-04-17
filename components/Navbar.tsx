@@ -3,10 +3,12 @@
 import { useEffect, useState } from 'react';
 import AnimatedSpiderLogo from './AnimatedSpiderLogo';
 import NavDrawer from './NavDrawer';
+import NotificationsDrawer from './NotificationsDrawer';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [notifsOpen, setNotifsOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
@@ -26,9 +28,9 @@ export default function Navbar() {
       >
         <nav
           className={[
-            'pointer-events-auto relative flex items-center gap-3 md:gap-5 transition-all duration-500 ease-out',
+            'pointer-events-auto relative flex items-center gap-2 md:gap-3 transition-all duration-500 ease-out',
             scrolled
-              ? 'w-auto max-w-[min(900px,95vw)] rounded-full border border-web-light/40 bg-abyss/70 pl-3 pr-3 py-2.5'
+              ? 'w-auto max-w-[min(960px,95vw)] rounded-full border border-web-light/40 bg-abyss/70 pl-3 pr-3 py-2.5'
               : 'w-full border-b border-web/40 bg-void/50 px-5 md:px-7 py-4',
           ].join(' ')}
           style={{
@@ -57,7 +59,7 @@ export default function Navbar() {
             aria-label="Open menu"
             aria-expanded={drawerOpen}
             className={[
-              'hover-target burger-btn relative flex items-center justify-center rounded-md border border-web/70 hover:border-strike/70 bg-cave/40 hover:bg-cave transition-colors',
+              'hover-target burger-btn relative flex items-center justify-center rounded-md border border-web/70 hover:border-strike/70 bg-cave/40 hover:bg-cave transition-colors shrink-0',
               scrolled ? 'w-9 h-9' : 'w-10 h-10',
               drawerOpen ? 'is-open' : '',
             ].join(' ')}
@@ -79,7 +81,7 @@ export default function Navbar() {
             <AnimatedSpiderLogo size={scrolled ? 28 : 34} />
             <span
               className={[
-                'font-display font-light tracking-[0.22em] text-silk uppercase transition-all duration-500',
+                'hidden sm:inline font-display font-light tracking-[0.22em] text-silk uppercase transition-all duration-500',
                 scrolled ? 'text-[13px]' : 'text-sm md:text-base',
               ].join(' ')}
             >
@@ -97,42 +99,86 @@ export default function Navbar() {
 
           <div className="flex-1" />
 
-          {/* Right readout + CTA */}
-          <div className="hidden md:flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.3em] text-silk-dim">
-            <span>RTP 96.1</span>
+          {/* Right readout scan (desktop only, no more RTP) */}
+          <div className="hidden md:flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.3em] text-silk-dim mr-1">
             <span className="nav-scan-line" />
           </div>
 
-          {/* Cashier — wallet glyph with red dew-drop indicator */}
+          {/* Colony social link */}
+          <a
+            href="#colony"
+            aria-label="Colony · community"
+            title="Colony"
+            className={[
+              'hover-target relative flex items-center justify-center rounded-md border border-web/70 hover:border-strike/70 text-silk-dim hover:text-silk bg-cave/40 hover:bg-cave transition-colors shrink-0',
+              scrolled ? 'w-9 h-9' : 'w-10 h-10',
+            ].join(' ')}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <circle cx="9" cy="8" r="3.2" />
+              <circle cx="17" cy="10" r="2.6" />
+              <path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" />
+              <path d="M14.5 20c.2-2.2 1.8-3.6 4-3.6s3.5 1.2 3.5 3.6" />
+            </svg>
+          </a>
+
+          {/* Notifications bell */}
+          <button
+            onClick={() => setNotifsOpen(true)}
+            aria-label="Notifications and emails"
+            title="Notifications"
+            className={[
+              'hover-target relative flex items-center justify-center rounded-md border border-web/70 hover:border-strike/70 text-silk-dim hover:text-silk bg-cave/40 hover:bg-cave transition-colors shrink-0',
+              scrolled ? 'w-9 h-9' : 'w-10 h-10',
+            ].join(' ')}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+              <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+            </svg>
+            <span
+              aria-hidden
+              className="absolute -top-0.5 -right-0.5 min-w-[14px] h-[14px] px-1 rounded-full bg-strike text-[9px] font-mono font-bold text-silk flex items-center justify-center"
+              style={{ boxShadow: '0 0 8px rgba(239,68,68,0.8)' }}
+            >
+              6
+            </span>
+          </button>
+
+          {/* Cashier — larger, with glow + pulse */}
           <a
             href="#cashier"
             aria-label="Cashier"
             title="Cashier"
             className={[
-              'hover-target relative flex items-center justify-center rounded-md border border-strike/40 hover:border-strike/90 text-silk hover:text-strike bg-cave/40 hover:bg-strike/10 transition-colors',
-              scrolled ? 'w-9 h-9' : 'w-10 h-10',
+              'hover-target cashier-btn relative flex items-center justify-center rounded-md border-2 border-strike/60 hover:border-strike text-strike bg-strike/10 hover:bg-strike/20 transition-all shrink-0',
+              scrolled ? 'w-11 h-11' : 'w-12 h-12',
             ].join(' ')}
+            style={{
+              boxShadow: '0 0 14px rgba(239,68,68,0.35), inset 0 0 10px rgba(239,68,68,0.1)',
+            }}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <rect x="3" y="7" width="18" height="12" rx="2" />
-              <path d="M3 11h18" />
-              <path d="M16 15h2" />
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <rect x="2.5" y="6.5" width="19" height="13" rx="2" />
+              <path d="M2.5 11h19" />
+              <circle cx="17.5" cy="15.5" r="1.3" />
             </svg>
             <span
               aria-hidden
-              className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-strike"
-              style={{ boxShadow: '0 0 6px rgba(239,68,68,0.8)' }}
+              className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-strike animate-pulse"
+              style={{ boxShadow: '0 0 10px rgba(239,68,68,1)' }}
             />
           </a>
 
+          {/* Deposit CTA (renamed from Enter) */}
           <a
-            href="#enter"
+            href="#cashier"
             className={[
-              'hover-target inline-flex items-center font-display uppercase tracking-[0.18em] text-silk bg-venom hover:bg-strike transition-colors rounded-full',
+              'hover-target inline-flex items-center font-display uppercase tracking-[0.18em] text-silk bg-venom hover:bg-strike transition-colors rounded-full shrink-0',
               scrolled ? 'px-4 py-1.5 text-[11px]' : 'px-5 py-2 text-xs',
             ].join(' ')}
           >
-            Enter
+            Deposit
           </a>
         </nav>
       </header>
@@ -148,6 +194,7 @@ export default function Navbar() {
       />
 
       <NavDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
+      <NotificationsDrawer open={notifsOpen} onClose={() => setNotifsOpen(false)} />
     </>
   );
 }

@@ -11,7 +11,6 @@ if (typeof window !== 'undefined') gsap.registerPlugin(ScrollTrigger);
 type Game = {
   name: string;
   tag: string;
-  rtp: string;
   volatility: 'Low' | 'Medium' | 'High' | 'Extreme';
   hue: number; // base hue for generated art
   accent: string;
@@ -22,7 +21,6 @@ type Game = {
 const featured: Game = {
   name: "Widow's Web",
   tag: 'Featured · Slot',
-  rtp: '96.8%',
   volatility: 'High',
   hue: 0,
   accent: '#ef4444',
@@ -34,7 +32,6 @@ const supporting: Game[] = [
   {
     name: 'Silk Fortune',
     tag: 'Slot',
-    rtp: '97.1%',
     volatility: 'Low',
     hue: 0,
     accent: '#e8e8e8',
@@ -44,7 +41,6 @@ const supporting: Game[] = [
   {
     name: 'Fang Frenzy',
     tag: 'Table',
-    rtp: '96.2%',
     volatility: 'Medium',
     hue: 0,
     accent: '#b91c1c',
@@ -54,7 +50,6 @@ const supporting: Game[] = [
   {
     name: 'Hourglass Hunt',
     tag: 'Jackpot',
-    rtp: '96.5%',
     volatility: 'Extreme',
     hue: 0,
     accent: '#c4a265',
@@ -326,12 +321,6 @@ function Card({
             {game.name}
           </h3>
           <div className="mt-3 flex items-center gap-3 flex-wrap">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-web/70 bg-void/60 backdrop-blur-sm">
-              <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-shadow">
-                RTP
-              </span>
-              <span className="font-mono text-xs text-silk">{game.rtp}</span>
-            </span>
             <span className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md border border-web/70 bg-void/60 backdrop-blur-sm">
               <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-shadow">
                 Vol

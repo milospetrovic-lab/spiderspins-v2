@@ -13,7 +13,7 @@ type Stat = {
 
 const stats: Stat[] = [
   { target: 500, suffix: '+', label: 'Games', format: 'plain' },
-  { target: 96.1, suffix: '%', label: 'Avg RTP', decimals: 1 },
+  { target: 5, suffix: '', label: 'VIP tiers', format: 'plain' },
   { target: 8, suffix: 'K+', label: 'Colony', format: 'plain' },
   { target: 1.8, prefix: '$', suffix: 'M', label: 'Paid / month', decimals: 1 },
 ];

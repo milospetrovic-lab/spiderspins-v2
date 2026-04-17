@@ -51,7 +51,7 @@ export default function HUDOverlay() {
       <div className="absolute top-1/2 right-3 -translate-y-1/2 flex flex-col items-end gap-2 font-mono text-[9px] uppercase tracking-[0.3em] text-silk-dim">
         <span className="text-strike">● Live</span>
         <span>SCTR · 01</span>
-        <span>RTP · 96.1</span>
+        <span>TIER · 04</span>
         <span className="text-fang">VIP · EMP</span>
         <div className="mt-3 flex flex-col gap-[4px]">
           {Array.from({ length: 10 }).map((_, i) => (

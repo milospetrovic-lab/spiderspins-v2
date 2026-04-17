@@ -39,7 +39,7 @@ const posts: Post[] = [
     category: 'Web Report',
     title: 'September payouts, full ledger',
     excerpt:
-      'Every provider, every RTP, every withdrawal average. The monthly web report with nothing pulled off the page.',
+      'Every provider, every payout, every withdrawal average. The monthly web report with nothing pulled off the page.',
     date: 'Oct 02',
     readTime: '3 min',
   },

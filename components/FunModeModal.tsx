@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 type Props = {
   open: boolean;
   onClose: () => void;
-  game: { name: string; image?: string; accent: string; rtp: string } | null;
+  game: { name: string; image?: string; accent: string; volatility: string } | null;
 };
 
 const SYMBOLS = ['🕷', '🕸', '🩸', '🦴', '⚱', '🗝', '🪙'];
@@ -140,7 +140,7 @@ export default function FunModeModal({ open, onClose, game }: Props) {
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-strike shadow-[0_0_8px_#ef4444] animate-pulse" />
               <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-strike">Practice hunt</span>
               <span className="font-mono text-[10px] text-shadow">·</span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-silk-dim">RTP {game.rtp}</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-silk-dim">Vol · {game.volatility}</span>
             </div>
             <h3 className="font-display font-extrabold text-silk text-2xl md:text-3xl">{game.name}</h3>
           </div>
@@ -206,7 +206,7 @@ export default function FunModeModal({ open, onClose, game }: Props) {
           </div>
 
           <p className="mt-4 font-mono text-[9px] uppercase tracking-[0.28em] text-shadow text-center">
-            Demo mode — no funds at stake · RTP matches live game
+            Demo mode — no funds at stake · math mirrors the live game
           </p>
         </div>
       </div>
