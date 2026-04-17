@@ -70,7 +70,7 @@ export default function PromoBanner() {
               <span className="text-silk-dim text-[0.6em] font-light"> Every thread earns a ticket.</span>
             </h2>
             <p className="hidden md:block font-display font-light text-silk/85 text-base mb-4 max-w-md">
-              Pool refreshes Monday. Top silk-weavers share the web's spoils. No wagering tricks — the math is public.
+              Pool refreshes Monday. Top silk-weavers share the web's spoils. No wagering tricks.
             </p>
             <span className="inline-flex items-center gap-2 self-start px-4 md:px-5 py-2 md:py-2.5 rounded-full bg-venom text-silk text-xs md:text-sm uppercase tracking-[0.18em] font-display font-medium group-hover:bg-strike transition-colors">
               Read the rules

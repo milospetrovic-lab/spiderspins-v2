@@ -82,7 +82,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="font-display font-light text-silk-dim text-sm max-w-xs leading-relaxed">
-              Your web. Your rules. A patient casino for players who read the math.
+              Your web. Your rules. A patient casino for players who read the web.
             </p>
 
             <a

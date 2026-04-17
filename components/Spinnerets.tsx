@@ -21,7 +21,7 @@ const posts: Post[] = [
     category: 'Silk Thread',
     title: 'The October weave: four reload drops',
     excerpt:
-      'Four reload offers, four silk patterns. Here is the math behind each, and which fits your play style.',
+      'Four reload offers, four silk patterns. Pick the one that fits your play style.',
     date: 'Oct 14',
     readTime: '4 min',
   },
@@ -35,11 +35,11 @@ const posts: Post[] = [
     readTime: '7 min',
   },
   {
-    badge: 'Transparency',
+    badge: 'Community',
     category: 'Web Report',
-    title: 'September payouts, full ledger',
+    title: 'September in the Colony',
     excerpt:
-      'Every provider, every payout, every withdrawal average. The monthly web report with nothing pulled off the page.',
+      'Leaderboard highlights, tier-up ceremonies, and the three biggest molt moments from last month.',
     date: 'Oct 02',
     readTime: '3 min',
   },

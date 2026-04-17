@@ -12,7 +12,7 @@ export default function TermsPage() {
     <LegalLayout
       eyebrow="Terms of Service"
       title="The contract."
-      intro="Every silk strand has a tension. These terms are ours. They are written so you can read them without a lawyer, because a brand built on transparency cannot bury its rules in fine print."
+      intro="Every silk strand has a tension. These terms are ours. They are written so you can read them without a lawyer."
     >
       <section>
         <h2 className="font-display font-extrabold text-silk text-xl md:text-2xl mb-3">1. Who can play</h2>
@@ -31,8 +31,8 @@ export default function TermsPage() {
         <p>Every bonus has a wagering multiplier (most are 35×) and a maximum cashout cap. The exact terms appear on the bonus card before you accept it. We do not change wagering retroactively. We do not void winnings for "irregular play" without specifying what that means; if you ever feel a decision was unfair, our complaints address is published below.</p>
       </section>
       <section>
-        <h2 className="font-display font-extrabold text-silk text-xl md:text-2xl mb-3">5. The math is the math</h2>
-        <p>Volatility ratings and payout profiles are published on every game page. Provider RNGs are independently audited (certificates linked from each game). We do not manipulate outcomes. You can win, you can lose, and the long-run distribution is exactly what the math predicts. The web is patient on both sides.</p>
+        <h2 className="font-display font-extrabold text-silk text-xl md:text-2xl mb-3">5. Game integrity</h2>
+        <p>Provider RNGs are independently audited. We do not manipulate outcomes. You can win, you can lose. The web is patient on both sides.</p>
       </section>
       <section>
         <h2 className="font-display font-extrabold text-silk text-xl md:text-2xl mb-3">6. Disputes</h2>

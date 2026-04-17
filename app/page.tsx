@@ -2,7 +2,6 @@ import BenefitsSlider from '@/components/BenefitsSlider';
 import GameCards from '@/components/GameCards';
 import WebVault from '@/components/WebVault';
 import VIPTiers from '@/components/VIPTiers';
-import TermsCalculator from '@/components/TermsCalculator';
 import StatsCounters from '@/components/StatsCounters';
 import Colony from '@/components/Colony';
 import Spinnerets from '@/components/Spinnerets';
@@ -85,7 +84,7 @@ export default function HomePage() {
             .
           </h1>
           <p className="mt-8 max-w-2xl mx-auto font-display font-light text-silk-dim text-lg md:text-xl">
-            Patient math. Red silk. A casino for players who read the web.
+            Red silk. A casino for players who read the web.
           </p>
           <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pointer-events-auto">
             <a
@@ -95,10 +94,10 @@ export default function HomePage() {
               Enter the Web
             </a>
             <a
-              href="#terms"
+              href="#benefits"
               className="hover-target hero-skip-intro inline-flex items-center px-8 py-4 border border-web-light/60 text-silk-dim hover:text-silk uppercase tracking-[0.15em] text-sm font-display font-medium transition-colors"
             >
-              See the math
+              Why the web
             </a>
           </div>
           <p className="hidden md:block mt-10 font-mono text-[10px] uppercase tracking-[0.3em] text-shadow">
@@ -138,7 +137,6 @@ export default function HomePage() {
       <StatsCounters />
       <WebVault />
       <VIPTiers />
-      <TermsCalculator />
       {/* B1 · Silk Boutique (loyalty / comp shop) */}
       <SilkBoutique />
       <PaymentCard />

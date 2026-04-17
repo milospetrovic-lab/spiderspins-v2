@@ -99,7 +99,7 @@ export default async function OG() {
               fontWeight: 300,
             }}
           >
-            Patient math · red silk · a casino for players who read the web.
+            Red silk · a patient casino for players who read the web.
           </p>
         </div>
 

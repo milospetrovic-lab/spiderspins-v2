@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'SpiderSpins — Your web. Your rules.',
     description:
-      'Transparent math, 500+ games, 8K+ Colony. The patient casino for players who read the web.',
+      '500+ games, 8K+ Colony. The patient casino for players who read the web.',
     url: 'https://spiderspins.vercel.app',
     siteName: 'SpiderSpins',
     locale: 'en_US',
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'SpiderSpins — Your web. Your rules.',
     description:
-      'Transparent math. Patient wins. 500+ games, 8K+ Colony.',
+      'Patient wins. 500+ games. 8K+ Colony.',
   },
   robots: {
     index: false,
@@ -82,7 +82,7 @@ export default function RootLayout({
         url: 'https://spiderspins.vercel.app/',
         logo: 'https://spiderspins.vercel.app/icon.svg',
         description:
-          'Patient-player online casino. Transparent math, 500+ games, 5-tier VIP lifecycle.',
+          'Patient-player online casino. 500+ games, 5-tier VIP lifecycle.',
         slogan: 'Your web. Your rules.',
         foundingDate: '2026',
         sameAs: [

@@ -36,7 +36,7 @@ const tierSpecies: Species[] = [
     tierColor: '#888',
     trait: 'Patient hunter · no web',
     story:
-      'The Wolf Spider does not build. It stalks. Eight eyes scanning the floor of the forest, body low, every step calculated. New players are Wolf Spiders — they have not yet earned the right to weave, but they are learning to read the ground beneath them. Watch. Wait. Strike when the math says strike.',
+      'The Wolf Spider does not build. It stalks. Eight eyes scanning the floor of the forest, body low, every step calculated. New players are Wolf Spiders — they have not yet earned the right to weave, but they are learning to read the ground beneath them. Watch. Wait. Strike when the moment is yours.',
     benefit: 'Daily stalk-hunt mini-games · welcome bonus · Saturday free spins',
   },
   {

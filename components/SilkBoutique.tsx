@@ -84,15 +84,6 @@ const items: ShopItem[] = [
     color: '#b91c1c',
   },
   {
-    id: 'merch-hoodie',
-    name: 'Widow Hoodie',
-    blurb: 'Black hourglass embroidered. Limited drop · ships worldwide.',
-    cost: 12000,
-    tier: 'Widow+',
-    glyph: '👕',
-    color: '#e8e8e8',
-  },
-  {
     id: 'exp-weekend',
     name: 'Colony Weekend',
     blurb: '2-night stay · team event · Empress-tier experience.',
@@ -164,7 +155,7 @@ export default function SilkBoutique() {
               Spend your <em className="text-strike not-italic">silk</em>.
             </h2>
             <p className="shop-reveal mt-4 max-w-xl font-display font-light text-silk-dim text-base md:text-lg">
-              Every wager earns Silk Points. Redeem them for cash chips, free spins, tournament entries, merch — or the web itself, if you weave long enough.
+              Every wager earns Silk Points. Redeem them for cash chips, free spins, tournament entries, boost reloads — or a Colony weekend, if you weave long enough.
             </p>
           </div>
           {/* balance card */}

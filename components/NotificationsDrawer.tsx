@@ -72,7 +72,7 @@ const emails: Item[] = [
     id: 'e3',
     emoji: '🛍️',
     title: 'THIS WEEK IN THE SILK BOUTIQUE — THREE DROPS.',
-    body: 'Widow Hoodie back in stock. Limited to 50 pieces.',
+    body: 'Three boutique drops live today. First come, first claimed.',
     ago: '2 days ago',
   },
   {

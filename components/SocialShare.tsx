@@ -14,7 +14,7 @@ type Channel = {
   url: (text: string, href: string) => string;
 };
 
-const SHARE_TEXT = 'Caught in the web — SpiderSpins is a patient-player casino for people who read the math.';
+const SHARE_TEXT = 'Caught in the web — SpiderSpins is a patient-player casino for people who read the web.';
 const SITE_URL = 'https://spiderspins.vercel.app';
 
 const channels: Channel[] = [

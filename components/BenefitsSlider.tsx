@@ -43,14 +43,6 @@ const benefits = [
   },
   {
     num: '05',
-    headline: 'Provably fair',
-    tagline: 'Trust, then verify.',
-    body:
-      'On-chain seeds and third-party audits. The math is transparent; so is the ledger.',
-    stat: { label: 'Audits', value: '4× / yr' },
-  },
-  {
-    num: '06',
     headline: 'Patient VIP',
     tagline: 'Every thread rewards.',
     body:
@@ -320,7 +312,7 @@ export default function BenefitsSlider() {
             Benefits.
           </h2>
           <p className="max-w-md font-display font-light text-silk-dim text-base md:text-lg mb-6">
-            Built for players who know the math. Transparent, proven, and earned.
+            Built for players who read the web. Patient, precise, and earned.
           </p>
 
           {/* pagination dots */}
