@@ -502,11 +502,10 @@ export default function MorphingSpiderForms() {
         setEnabled(false);
         return;
       }
-      if (window.matchMedia('(hover: none), (pointer: coarse)').matches) {
-        // mobile falls back to a static silhouette block (rendered below)
-        setEnabled(false);
-        return;
-      }
+      // Touch devices used to fall back to a static silhouette. We now enable
+      // the particle stage on mobile too — the GPU tier + mobile particle cap
+      // (1500 max) keeps perf in range. Truly weak devices still end up at
+      // tier 0 below and fall through to the static silhouette.
     } catch {}
     let cancelled = false;
     (async () => {
@@ -558,8 +557,12 @@ export default function MorphingSpiderForms() {
     camera.position.set(0, 0, 480);
     camera.lookAt(0, 0, 0);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+    const renderer = new THREE.WebGLRenderer({
+      antialias: !isMobile,
+      alpha: true,
+      powerPreference: isMobile ? 'low-power' : 'high-performance',
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.25 : 1.75));
     renderer.setSize(W, H);
     renderer.setClearColor(0x000000, 0);
     host.appendChild(renderer.domElement);

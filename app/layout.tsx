@@ -14,7 +14,6 @@ import ParticleField3D from '@/components/ParticleField3D';
 import HUDOverlay from '@/components/HUDOverlay';
 import ScrollSpider from '@/components/ScrollSpider';
 import ConfettiCannon from '@/components/ConfettiCannon';
-import RewardOrb from '@/components/RewardOrb';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 
@@ -121,7 +120,6 @@ export default function RootLayout({
         <ScrollSpider />
         <CustomCursor />
         <Navbar />
-        <RewardOrb />
         <main className="relative z-10">{children}</main>
         <ConfettiCannon scope="viewport" />
         <SpeedInsights />

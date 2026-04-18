@@ -3,12 +3,10 @@
 import { useEffect, useState } from 'react';
 import AnimatedSpiderLogo from './AnimatedSpiderLogo';
 import NavDrawer from './NavDrawer';
-import NotificationsDrawer from './NotificationsDrawer';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [notifsOpen, setNotifsOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
@@ -104,13 +102,13 @@ export default function Navbar() {
             <span className="nav-scan-line" />
           </div>
 
-          {/* Colony social link */}
+          {/* Colony social link — hidden on very small viewports so Deposit CTA fits */}
           <a
             href="#colony"
             aria-label="Colony · community"
             title="Colony"
             className={[
-              'hover-target relative flex items-center justify-center rounded-md border border-web/70 hover:border-strike/70 text-silk-dim hover:text-silk bg-cave/40 hover:bg-cave transition-colors shrink-0',
+              'hover-target hidden sm:flex relative items-center justify-center rounded-md border border-web/70 hover:border-strike/70 text-silk-dim hover:text-silk bg-cave/40 hover:bg-cave transition-colors shrink-0',
               scrolled ? 'w-9 h-9' : 'w-10 h-10',
             ].join(' ')}
           >
@@ -121,29 +119,6 @@ export default function Navbar() {
               <path d="M14.5 20c.2-2.2 1.8-3.6 4-3.6s3.5 1.2 3.5 3.6" />
             </svg>
           </a>
-
-          {/* Notifications bell */}
-          <button
-            onClick={() => setNotifsOpen(true)}
-            aria-label="Notifications and emails"
-            title="Notifications"
-            className={[
-              'hover-target relative flex items-center justify-center rounded-md border border-web/70 hover:border-strike/70 text-silk-dim hover:text-silk bg-cave/40 hover:bg-cave transition-colors shrink-0',
-              scrolled ? 'w-9 h-9' : 'w-10 h-10',
-            ].join(' ')}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-              <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-            </svg>
-            <span
-              aria-hidden
-              className="absolute -top-0.5 -right-0.5 min-w-[14px] h-[14px] px-1 rounded-full bg-strike text-[9px] font-mono font-bold text-silk flex items-center justify-center"
-              style={{ boxShadow: '0 0 8px rgba(239,68,68,0.8)' }}
-            >
-              6
-            </span>
-          </button>
 
           {/* Cashier — larger, with glow + pulse */}
           <a
@@ -194,7 +169,6 @@ export default function Navbar() {
       />
 
       <NavDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
-      <NotificationsDrawer open={notifsOpen} onClose={() => setNotifsOpen(false)} />
     </>
   );
 }
