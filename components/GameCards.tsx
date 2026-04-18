@@ -345,7 +345,7 @@ function Card({
             Try free
           </button>
           <a
-            href="#cashier"
+            href="/#play-crypto"
             className="hover-target inline-flex items-center gap-2 px-4 py-2 rounded-full border border-strike/60 bg-strike/10 text-strike font-display text-xs uppercase tracking-[0.22em]"
           >
             Play now

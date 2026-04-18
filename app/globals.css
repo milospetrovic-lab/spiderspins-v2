@@ -512,6 +512,12 @@ body {
 /* Hide the Vol pill on hover so the Try-free / Play-now buttons aren't
    crashed into "Vol · Extreme" on the featured card. */
 .game-card:hover .gc-meta { opacity: 0; transform: translateY(8px); pointer-events: none; }
+/* Touch / no-hover devices never trigger :hover. Always show the Try-free +
+   Play-now CTAs there, and keep the Vol pill visible too. */
+@media (hover: none) {
+  .gc-play { opacity: 1 !important; transform: translateY(0) !important; }
+  .gc-meta { opacity: 1 !important; transform: none !important; pointer-events: auto !important; }
+}
 .scan-band {
   animation: scan-band 6s ease-in-out infinite;
   transform-origin: center center;

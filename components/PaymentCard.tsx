@@ -1281,8 +1281,9 @@ export default function PaymentCard() {
         }}
       />
 
-      {/* Crypto options */}
-      <div className="max-w-2xl mx-auto mt-14">
+      {/* Crypto options — dedicated anchor so CTAs can land directly here
+          instead of at the card-form top. */}
+      <div id="play-crypto" className="max-w-2xl mx-auto mt-14 scroll-mt-24">
         <div className="flex items-center justify-between mb-4">
           <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-fang">
             Play with crypto

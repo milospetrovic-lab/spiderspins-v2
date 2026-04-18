@@ -122,7 +122,7 @@ export default function Navbar() {
 
           {/* Cashier — larger, with glow + pulse. Absolute href so /404 works too. */}
           <a
-            href="/#cashier"
+            href="/#play-crypto"
             aria-label="Cashier"
             title="Cashier"
             className={[
@@ -148,7 +148,7 @@ export default function Navbar() {
           {/* Deposit CTA — absolute href so it routes to the landing's
               cashier ("Play with crypto") section from any page, including /404. */}
           <a
-            href="/#cashier"
+            href="/#play-crypto"
             className={[
               'hover-target inline-flex items-center font-display uppercase tracking-[0.18em] text-silk bg-venom hover:bg-strike transition-colors rounded-full shrink-0',
               scrolled ? 'px-4 py-1.5 text-[11px]' : 'px-5 py-2 text-xs',
