@@ -513,9 +513,18 @@ body {
    crashed into "Vol · Extreme" on the featured card. */
 .game-card:hover .gc-meta { opacity: 0; transform: translateY(8px); pointer-events: none; }
 /* Touch / no-hover devices never trigger :hover. Always show the Try-free +
-   Play-now CTAs there, and keep the Vol pill visible too. */
+   Play-now CTAs, and keep the Vol pill visible too. We also switch gc-play
+   from absolute-bottom-right to static flow so the CTAs stack cleanly below
+   the Vol pill (instead of overlapping it on phones). */
 @media (hover: none) {
-  .gc-play { opacity: 1 !important; transform: translateY(0) !important; }
+  .gc-play {
+    position: static !important;
+    opacity: 1 !important;
+    transform: none !important;
+    margin-top: 14px !important;
+    justify-content: flex-start !important;
+    flex-wrap: wrap !important;
+  }
   .gc-meta { opacity: 1 !important; transform: none !important; pointer-events: auto !important; }
 }
 .scan-band {
