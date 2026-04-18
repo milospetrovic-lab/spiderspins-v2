@@ -205,7 +205,7 @@ export default function NavDrawer({
         {/* CTA */}
         <div className="px-5 pb-5 pt-1">
           <a
-            href="#enter"
+            href="/#play-crypto"
             onClick={onClose}
             className="hover-target block w-full text-center px-4 py-3.5 rounded-md bg-venom hover:bg-strike transition-colors text-silk font-display uppercase tracking-[0.18em] text-sm shadow-strike-glow"
           >

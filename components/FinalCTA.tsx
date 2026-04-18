@@ -98,7 +98,7 @@ export default function FinalCTA() {
         <div className="cta-reveal mt-12 flex items-center justify-center">
           <a
             ref={buttonRef}
-            href="#play"
+            href="/#play-crypto"
             className="hover-target relative inline-flex items-center gap-3 px-10 py-5 rounded-md bg-venom hover:bg-strike transition-all font-display uppercase tracking-[0.22em] text-sm text-silk overflow-hidden"
             style={{
               boxShadow:
